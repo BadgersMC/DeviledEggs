@@ -1,0 +1,9 @@
+name: DeviledEggs
+version: 1.1.0
+author: BadgersMC
+main: com.gmail.thelagginghippie.DeviledEggs
+description: A plugin for throwable chicken eggs.
+commands:
+  de:
+    description: Main command for DeviledEggs
+    usage: /de <give|reload>
