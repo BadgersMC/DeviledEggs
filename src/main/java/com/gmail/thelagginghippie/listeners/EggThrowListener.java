@@ -3,15 +3,17 @@ package com.gmail.thelagginghippie.listeners;
 import com.gmail.thelagginghippie.DeviledEggs;
 import com.gmail.thelagginghippie.api.DeviledEggThrowEvent;
 import com.gmail.thelagginghippie.utils.EggUtils;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.inventory.ItemStack;
 
 public class EggThrowListener implements Listener {
 
@@ -23,23 +25,28 @@ public class EggThrowListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (EggUtils.isDeviledEgg(event.getItem())) {
-			// Set custom metadata on the egg entity
-			if (event.getClickedBlock() != null) {
-				// Drop the deviled egg item at the clicked block location
-				int amount = 1; // Adjust the amount as needed
+		if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			ItemStack item = event.getItem();
+			if (item != null && EggUtils.isDeviledEgg(item)) {
+				// Right-clicked with a Deviled Egg, handle the interaction
 				Player player = event.getPlayer();
-				event.getClickedBlock().getWorld().dropItem(event.getClickedBlock().getLocation(), EggUtils.giveDeviledEgg(amount, player));
 
-				// Set metadata for the first dropped egg
-				Item eggItem = event.getClickedBlock().getWorld().dropItem(event.getClickedBlock().getLocation(), EggUtils.giveDeviledEgg(amount, player));
-				eggItem.setMetadata("DeviledEgg", new FixedMetadataValue(plugin, true));
-				eggItem.setMetadata("ThrownEgg", new FixedMetadataValue(plugin, true));
+				// Trigger your custom event or handle the interaction directly here
+				DeviledEggThrowEvent deviledEggThrowEvent = new DeviledEggThrowEvent(player, true);
+				plugin.getServer().getPluginManager().callEvent(deviledEggThrowEvent);
+
+				// Remove one egg from the player's inventory
+				if (player.getGameMode() != GameMode.CREATIVE) {
+					player.getInventory().removeItem(new ItemStack(Material.EGG, 1));
+				}
 			}
-			DeviledEggThrowEvent deviledEggThrowEvent = new DeviledEggThrowEvent(event.getPlayer(), true);
-			plugin.getServer().getPluginManager().callEvent(deviledEggThrowEvent);
 		}
 	}
+
+
+
+
+
 
 
 	@EventHandler
