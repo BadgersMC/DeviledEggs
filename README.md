@@ -1,4 +1,4 @@
-My first Minecraft plugin that I am developing alongside my Porject Orion, and Java Masterclass program. With great assistance from kangarko and ChatGPT4.
+My first Minecraft plugin that I am developing alongside my Project Orion, and Java Masterclass program. With great assistance from kangarko and ChatGPT4.
 
 Recoded, and reuploaded.
 
